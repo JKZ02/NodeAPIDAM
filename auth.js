@@ -1,5 +1,15 @@
 const pool = require("./db")
 
+const getAllUsers = (req, res) => {
+    pool.query('SELECT username,role FROM users;').then(results => {
+        res.status(200).json(results.rows);
+    }).catch(error => {
+        res.status(500).json({result: "Ocorreu um erro ao tentar obter os produtos"});
+        console.log(error);
+    });
+
+}
+
 const login = (req, res) => {
     let body = req.body;
     
@@ -42,4 +52,5 @@ const register = (req, res) => {
 module.exports = {
     login,
     register,
+    getAllUsers
 }

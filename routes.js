@@ -6,6 +6,8 @@ const auth = require('./auth');
 
 router.get("/products", controller.getAllProducts);
 
+router.get("/users", auth.getAllUsers)
+
 router.put("/login", auth.login);
 
 router.put("/register", auth.register);
