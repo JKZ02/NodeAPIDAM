@@ -2,8 +2,13 @@ const express = require('express');
 const router = express.Router();
 
 const controller = require('./controller');
+const auth = require('./auth');
 
 router.get("/products", controller.getAllProducts);
+
+router.put("/login", auth.login);
+
+router.put("/register", auth.register);
 
 router.get("/products/:id", controller.getProductByID);
 
