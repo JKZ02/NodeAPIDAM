@@ -22,18 +22,20 @@ const login = (req, res) => {
 }
 
 const register = (req, res) => {
-    let username = req.params.id;
+    let body = req.body;
 
-    pool.query(`SELECT * FROM users WHERE username='${body.username}';`).then(results => {
-        if (results.rowCount != 0) {
-            res.status(200).json("Conta duplicada");
-        } else {
-            res.status(200).json("Conta valida");
-        }
-    }).catch(error => {
-        res.status(500).json({result: "Ocorreu um erro ao tentar obter o utilizador"});
-        console.log(error);
-    });
+    if (body) {
+        pool.query(`INSERT INTO "users"("username", "password", "role") 
+                    VALUES('${body.username}', '${body.password}', '${body.role}');`).then(results => {
+            res.status(200).json("User criado");
+            //console.log("Produto Adicionado");
+        }).catch(error => {
+            res.status(500).json("Ocorreu um erro ao tentar criar o produto");
+            console.log(error);
+        });
+    } else {
+        res.status(400).json("Não existem dados para fazer a criação de um novo user");
+    }
 }
 
 
