@@ -16,8 +16,8 @@ const createUser = (req, res) => {
 
     if (body) {
         pool.query(`INSERT INTO "users"("username", "password", "role") 
-                    VALUES('${body.username}', '${body.password}', '${body.role}');`).then(results => {
-            res.status(200).json("User criado");
+                    VALUES('${body.username}', '${body.password}', '${body.role}') RETURNING id;`).then(results => {
+            res.status(200).json(results.rows[0].id);
         }).catch(error => {
             res.status(500).json("Ocorreu um erro ao tentar criar o user");
             console.log(error);
