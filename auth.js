@@ -10,6 +10,62 @@ const getAllUsers = (req, res) => {
 
 }
 
+
+const createUser = (req, res) => {
+    let body = req.body;
+
+    if (body) {
+        pool.query(`INSERT INTO "users"("username", "password", "role") 
+                    VALUES('${body.username}', '${body.password}', '${body.role}');`).then(results => {
+            res.status(200).json("User criado");
+        }).catch(error => {
+            res.status(500).json("Ocorreu um erro ao tentar criar o user");
+            console.log(error);
+        });
+    } else {
+        res.status(400).json("Não existem dados para fazer a criação de um novo user");
+    }
+}
+
+
+const updateUser = (req, res) => {
+    let body = req.body;
+    let username = req.params.username
+    
+    if (body) {
+        pool.query(`UPDATE users SET username = '${body.username}', password = '${body.password}', role = '${body.role}' WHERE username='${username}'`).then(results => {
+            if (results.rowCount == 1) {
+                res.status(200).json("User Atualizado");
+            } else {
+                res.status(200).json("O user já foi eliminado");
+            }
+        }).catch(error => {
+            res.status(500).json("Ocorreu um erro ao tentar atualizar o user");
+            console.log(error);
+        });
+    } else {
+        res.status(400).json("Não existem dados para fazer a atualização do user");
+    }
+}
+
+
+const deleteUser = (req, res) => {
+    let username = req.params.username;
+
+    pool.query(`DELETE FROM users WHERE username=${username};`).then(results => {
+        if (results.rowCount == 1) {
+            res.status(200).json("User Eliminado");
+        } else {
+            res.status(200).json("O user já foi eliminado");
+        }
+    }).catch(error => {
+        res.status(500).json("Ocorreu um erro ao tentar eliminar o user");
+        console.log(error);
+    });
+}
+
+
+
 const login = (req, res) => {
     let body = req.body;
     
@@ -31,26 +87,11 @@ const login = (req, res) => {
     });
 }
 
-const register = (req, res) => {
-    let body = req.body;
-
-    if (body) {
-        pool.query(`INSERT INTO "users"("username", "password", "role") 
-                    VALUES('${body.username}', '${body.password}', '${body.role}');`).then(results => {
-            res.status(200).json("User criado");
-            //console.log("Produto Adicionado");
-        }).catch(error => {
-            res.status(500).json("Ocorreu um erro ao tentar criar o produto");
-            console.log(error);
-        });
-    } else {
-        res.status(400).json("Não existem dados para fazer a criação de um novo user");
-    }
-}
-
 
 module.exports = {
     login,
-    register,
+    createUser,
+    updateUser,
+    deleteUser,
     getAllUsers
 }
